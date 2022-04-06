@@ -8,8 +8,14 @@ import { CartService } from '../_services/cart.service';
   styleUrls: ['./cheeses-tab.component.css'],
 })
 export class CheesesTabComponent implements OnInit {
-  cheeses: [] = [];
-  products: [] = [];
+   products: any[] = [];
+  carts: any[] = [];
+
+  purchaseArray= [{}];
+
+
+  openModal : boolean = false;
+  selectedCheese: {} = null;
 
   contentLoadedSups: boolean = false;
   contentLoadedProds: boolean = false;
@@ -27,7 +33,7 @@ export class CheesesTabComponent implements OnInit {
     this.productService.getCheeses().subscribe((prods) => {
       this.products = prods;
       this.contentLoadedProds = true;
-    });
+    });    
   }
 
   //Add to cart function
@@ -35,5 +41,17 @@ export class CheesesTabComponent implements OnInit {
     console.log('Added to cart');
     console.log(id);
     this.cartService.AddProductToCart(id);
+  }
+
+  viewDetails(cheeseId: number){
+    this.selectedCheese = this.products.filter(x=>x.id == cheeseId)[0];
+    this.openModal = true;
+
+    console.log(this.purchaseArray)
+  }
+
+  closeModal(){
+    this.openModal = false;
+    this.selectedCheese = null;
   }
 }

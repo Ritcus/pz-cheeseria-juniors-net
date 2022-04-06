@@ -3,6 +3,8 @@ import { CartService } from '../_services/cart.service';
 import { CartModelPublic } from '../_models/cart';
 import { Cheese } from '../_models/cheese';
 
+import { CheesesTabComponent } from '../cheeses-tab/cheeses-tab.component';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -14,6 +16,13 @@ export class NavbarComponent implements OnInit {
   cartTotal: number;
   _message: string;
   products: Cheese[];
+
+  afterPurchased: boolean=false;
+  
+  openPurchase : boolean = false;
+  selectedCheese:null;
+
+  
 
   store: any = [];
   logo: any;
@@ -55,5 +64,32 @@ export class NavbarComponent implements OnInit {
       (total, [key, value]) => total + this.getDetails(key).price * value,
       0
     );
+  }
+
+  purchase(){
+    this.cartService.PurchaseProducts();
+    this.afterPurchased=true;
+    
+  }
+
+  // getRecent(){
+  //   this.cartService.GetRecentPurchases().subscribe((car)=>{
+  //     this.carts= car;
+  //     console.log(this.carts)
+  //   })
+  // }
+
+  recentPurchases: any []  = [];
+  openPurchaseModal(){
+    this.openPurchase = true;
+    this.cartService.GetRecentPurchases().subscribe((purchases)=>{
+      this.recentPurchases = purchases;
+    });
+    
+    
+  }
+
+  closePurchaseModal(){
+    this.openPurchase = false;
   }
 }

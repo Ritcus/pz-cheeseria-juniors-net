@@ -18,28 +18,38 @@
   >
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a
-          href="#"
+        <button class="btn" [attr.data-cy]="'recent-purchase-btn'" (click)="openPurchaseModal()">
+        <i
           class="nav-link"
           data-toggle="collapse"
           data-target=".navbar-collapse.show"
-          >Recent Purchases</a
-        >
+          >Recent Purchases
+        </i>
+          
+        </button>
+
+      
+ 
       </li>
+
+      
 
       <div class="dropdown-divider d-block d-lg-none"></div>
 
       <div class="d-block">
         <button class="btn btn-dark d-lg-none w-50 rounded-0">
-          <i
+          <a
             class="fa fa-shopping-cart"
             routerLink="/cart"
             data-toggle="collapse"
             data-target=".navbar-collapse.show"
-          ></i
+          ></a
           >View Cart
         </button>
       </div>
@@ -80,7 +90,7 @@
               align-items-center
               flex-column
             "
-            *ngIf="cartSize === 0"
+            *ngIf="cartSize === 0 && afterPurchased===false"
           >
             <span
               ><img
@@ -93,6 +103,30 @@
             >
             <span class="nothing-small-text"
               >Add items to your cart and then find them here.</span
+            >
+          </div>
+          <div
+            class="
+              no-item
+              w-100
+              d-flex
+              justify-content-center
+              align-items-center
+              flex-column
+            "
+            *ngIf="cartSize === 0 && afterPurchased"
+          >
+            <span
+              ><img
+                src="../../assets/img/nothing_to_see.png"
+                alt=""
+                class="nothing-img"
+            /></span>
+            <span class="nothing-top-text mt-2 font-weight-bold"
+              >Purchase Success!</span
+            >
+            <span class="nothing-small-text"
+              >Add items to your cart again and then find them here.</span
             >
           </div>
 
@@ -165,10 +199,32 @@
           <div class="cart-summary" *ngIf="cartSize !== 0">
             <small>{{ cartSize !== 0 ? cartSize : 0 }} Selected item(s)</small>
             <h5>TOTAL : {{ calculateTotal() | currency: "USD" }}</h5>
+
+            <button class="btn" [attr.data-cy]="'purchase-cart-btn'" (click)="purchase()">Purchase</button>
+            
           </div>
+          
         </div>
       </li>
     </ul>
   </div>
 </nav>
+<!-- Recent Purchase Modal -->
+<div>
+  
+    <div id="myModal" class="modal" *ngIf="openPurchase" >
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" (click)="closePurchaseModal()">&times;</span>
+        <div class="Modallist">
+          <h2 style="color: red " *ngIf="recentPurchases.length===0"> No recent purchases found! </h2>
+          <h2 style="color: blue;" *ngIf="recentPurchases.length>0">Here is the list of recent purchased items:</h2>
+          <div class="ModalItem" [attr.data-cy]="'recent-purchase-list'" *ngFor="let item of recentPurchases; index as Count">
+          <p [attr.data-cy]="'recent-purchased-id-' + item.id">{{Count+1}}. </p><strong> {{item.title}} (${{item.price}})</strong></div>
+       </div>
+      </div>
+    </div>
+  </div>
+
+
 <!--End homepage-->

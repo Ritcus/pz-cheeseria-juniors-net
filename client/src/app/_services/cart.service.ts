@@ -3,11 +3,16 @@ import { ProductsService } from './cheeses.service';
 import { CartModelPublic } from '../_models/cart';
 import { Cheese } from '../_models/cheese';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
+  private server_url = environment.serverURL;
   //Data variable to store the cart information on the client's local storage
   private cartDataClient: CartModelPublic = {};
 
@@ -16,7 +21,7 @@ export class CartService {
   cartDataObs$ = new BehaviorSubject<CartModelPublic>(this.cartDataClient);
   productData$ = new BehaviorSubject<Cheese[]>([]);
 
-  constructor(private productsService: ProductsService) {
+  constructor(private productsService: ProductsService, private http: HttpClient) {
     //fetch cheeses
     this.productsService.getCheeses().subscribe((prods) => {
       this.productData$.next(prods);
@@ -54,5 +59,20 @@ export class CartService {
 
     delete this.cartDataClient[id];
     this.cartDataObs$.next(this.cartDataClient);
+  }
+
+  PurchaseProducts(){
+    this.http.post(this.server_url + '/cart/Purchase', this.cartDataClient).subscribe(response=>{
+      console.log(this.cartDataClient)
+      this.cartDataClient = {};
+      
+      this.cartDataObs$.next(this.cartDataClient);
+      
+    }, error=>{
+    });
+  }
+
+  GetRecentPurchases(): Observable<any>{
+    return this.http.get(this.server_url + '/cart/GetRecentPurchases');
   }
 }

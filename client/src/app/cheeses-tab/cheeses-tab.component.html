@@ -40,15 +40,21 @@
             class="d-flex row justify-content-lg-center"
             *ngIf="contentLoadedProds"
           >
-            <div
+
+          
+            <div 
               class="restaurant col-xs-12 col-sm-6 col-lg-4 col-xl-3"
               *ngFor="let cheese of products"
             >
+            <div class="upperPart" (click)="viewDetails(cheese.id)">
               <img src="{{ cheese.image }}" alt="" />
               <h3>{{ cheese.title }}</h3>
               <p>
                 <strong>${{ cheese.price }}</strong>
               </p>
+
+            </div>
+             
               <button
                 class="btn"
                 [attr.data-cy]="'add-to-cart-' + cheese.id"
@@ -56,6 +62,10 @@
               >
                 Add to cart
               </button>
+              
+
+
+              
             </div>
           </div>
         </div>
@@ -63,3 +73,18 @@
     </div>
   </div>
 </div>
+<div class="restaurant">
+  <div id="myModal" class="modal" *ngIf="openModal" >
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <div class="Modallist">
+      <div class="ModalItem"><p>Cheese Name:</p><strong>{{ selectedCheese.title }}</strong></div>
+      <div class="ModalItem"><p>Cheese Category:</p><strong>{{ selectedCheese.category }}</strong></div>
+      <div class="ModalItem"><p>Cheese Price:</p><strong>${{ selectedCheese.price }}</strong></div>
+      <div class="ModalItem"><p>Cheese Description:</p><strong>{{ selectedCheese.description }}</strong></div>
+    </div>
+    </div>
+  </div>
+</div>
+
